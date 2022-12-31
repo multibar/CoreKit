@@ -21,11 +21,6 @@ public struct Coin: Codable, Hashable {
     
     /// Coin quotes.
     public let quotes: [Quote]
-    
-    /// Coin route.
-    public var route: Route {
-        return Route(to: .add(stage: .coin(self)))
-    }
 }
 extension Coin {
     public struct Id: Codable, Hashable {
@@ -46,7 +41,7 @@ extension Coin {
         public let order: Int
     }
     public enum Perk: String, Codable {
-        /// Store mnemonic phrase perk
+        /// Store recovery phrase perk
         case key
         /// Wallet support perk
         case wallet

@@ -90,7 +90,7 @@ extension Route {
         public enum Stage: Codable, Hashable {
             case coins
             case coin(Coin)
-            case store(Coin)
+            case store(Store)
             case create(Coin)
             case `import`(Coin)
             
@@ -98,8 +98,24 @@ extension Route {
                 switch self {
                 case .coins:
                     return nil
-                case .coin(let coin), .store(let coin), .create(let coin), .import(let coin):
+                case .coin(let coin),
+                     .create(let coin),
+                     .import(let coin):
                     return coin
+                case.store(let store):
+                    return store.coin
+                }
+            }
+            public enum Store: Codable, Hashable {
+                case location(Coin)
+                case recovery(Coin, Wallet.Location)
+                
+                public var coin: Coin? {
+                    switch self {
+                    case .location(let coin),
+                         .recovery(let coin, _):
+                        return coin
+                    }
                 }
             }
         }
@@ -125,7 +141,6 @@ extension Route {
         }
     }
 }
-
 extension Route {
     public static var none: Route {
         return Route(to: .unknown(.internal()))
