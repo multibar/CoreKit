@@ -143,3 +143,13 @@ extension Coin {
         }
     }
 }
+extension Coin {
+    public var words: Int {
+        switch code {
+        case "TON":
+            return 24
+        default:
+            return 24
+        }
+    }
+}
