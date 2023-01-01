@@ -7,7 +7,7 @@ public struct Keychain {
             .synchronizable(true)
         do {
             try keychain
-                .label(wallet.title ?? wallet.id)
+                .label(wallet.title ?? wallet.id.components(separatedBy: "-").first ?? wallet.id)
                 .comment("\(wallet.coin)---\(wallet.created.ts)")
                 .set(wallet.phrase, key: wallet.id)
         } catch {
@@ -30,7 +30,7 @@ public struct Keychain {
                       created: Core.Date(with: Date(timeIntervalSince1970: date)),
                       location: .keychain)
     }
-    public static func wallets() async -> [Wallet] {
+    public static func wallets() -> [Wallet] {
         let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
             .synchronizable(true)
         return keychain.allKeys().compactMap({wallet(by: $0)})
