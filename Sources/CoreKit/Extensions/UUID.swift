@@ -22,3 +22,11 @@ extension UUID {
         return data
     }
 }
+extension UUID {
+    public var password: String {
+        var password = ""
+        let cased = uuidString.map { Bool.random() ? String($0).lowercased() : String($0).uppercased() }.joined(separator: "")
+        cased.forEach { password.append($0); password.append(String.Element.random) }
+        return password.replacingOccurrences(of: "-", with: "")
+    }
+}

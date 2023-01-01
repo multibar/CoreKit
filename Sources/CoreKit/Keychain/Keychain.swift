@@ -1,14 +1,53 @@
 import Foundation
 import KeychainAccess
 
-public struct Keychain {
-    public static func set(value: String, for key: String) {
-        KeychainAccess.Keychain(service: "service")[key] = value
+public struct Keychain {    
+    public static func save(wallet: Wallet) throws {
+        let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
+            .synchronizable(true)
+        do {
+            try keychain
+                .label(wallet.title ?? wallet.id)
+                .comment("\(wallet.coin)---\(wallet.created.ts)")
+                .set(wallet.phrase, key: wallet.id)
+        } catch {
+            throw error
+        }
     }
-    public static func get(for key: String) -> String? {
-        return KeychainAccess.Keychain(service: "service")[key]
+    public static func wallet(by id: String) -> Wallet? {
+        let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
+            .synchronizable(true)
+        guard let phrase = keychain[id],
+              let attributes = keychain[attributes: id],
+              let comments = attributes.comment,
+              let coin = comments.components(separatedBy: "---").first,
+              let date = Double(comments.components(separatedBy: "---").last ?? "")
+        else { return nil }
+        return Wallet(id: id,
+                      title: attributes.label,
+                      coin: coin,
+                      phrase: phrase,
+                      created: Core.Date(with: Date(timeIntervalSince1970: date)),
+                      location: .keychain)
     }
-    public static func remove(at key: String) {
-        try? KeychainAccess.Keychain(service: "service").remove(key)
+    public static func wallets() async -> [Wallet] {
+        let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
+            .synchronizable(true)
+        return keychain.allKeys().compactMap({wallet(by: $0)})
     }
+}
+
+extension Keychain {
+    fileprivate enum Service {
+        case wallets
+        case passcode
+        
+        public var value: String {
+            switch self {
+            case .wallets: return "bar.multi.wallet.wallets"
+            case .passcode: return "bar.multi.wallet.passcode"
+            }
+        }
+    }
+    
 }
