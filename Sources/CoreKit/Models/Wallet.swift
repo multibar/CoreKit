@@ -37,6 +37,20 @@ public struct Wallet: Codable, Hashable {
 extension Wallet {
     public enum Location: Codable, Hashable {
         case cloud
-        case keychain
+        case keychain(Keychain.Location)
+        
+        public var synchronizable: Bool {
+            switch self {
+            case .cloud:
+                return false
+            case .keychain(let location):
+                switch location {
+                case .local:
+                    return false
+                case .icloud:
+                    return true
+                }
+            }
+        }
     }
 }

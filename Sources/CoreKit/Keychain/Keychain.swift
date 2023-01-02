@@ -1,39 +1,36 @@
 import Foundation
 import KeychainAccess
 
-public struct Keychain {    
+public struct Keychain {
     public static func save(_ wallet: Wallet) throws {
         let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
-            .synchronizable(true)
+            .synchronizable(wallet.location.synchronizable)
         try keychain
             .label(wallet.title)
             .comment("\(wallet.coin)---\(wallet.created.ts)")
             .set(wallet.phrase, key: wallet.id)
     }
     public static func delete(_ wallet: Wallet) throws {
-        let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
-            .synchronizable(true)
-        try keychain.remove(wallet.id)
+        try KeychainAccess.Keychain(service: Service.wallets.value).remove(wallet.id)
     }
     public static func wallet(by id: String) -> Wallet? {
         let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
-            .synchronizable(true)
         guard let phrase = keychain[id],
               let attributes = keychain[attributes: id],
               let comments = attributes.comment,
               let coin = comments.components(separatedBy: "---").first,
-              let date = Double(comments.components(separatedBy: "---").last ?? "")
+              let date = Double(comments.components(separatedBy: "---").last ?? ""),
+              let icloud = attributes.synchronizable
         else { return nil }
         return Wallet(id: id,
                       title: attributes.label ?? id,
                       coin: coin,
                       phrase: phrase,
                       created: Core.Date(with: Date(timeIntervalSince1970: date)),
-                      location: .keychain)
+                      location: .keychain(icloud ? .icloud : .local))
     }
     public static func wallets() -> [Wallet] {
         let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
-            .synchronizable(true)
         return keychain.allKeys().compactMap({wallet(by: $0)})
     }
 }
@@ -50,5 +47,8 @@ extension Keychain {
             }
         }
     }
-    
+    public enum Location: Codable, Hashable {
+        case local
+        case icloud
+    }
 }

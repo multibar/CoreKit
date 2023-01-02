@@ -51,7 +51,7 @@ extension Route: Hashable, Equatable {
 }
 extension Route {
     public enum Destination: Codable, Hashable, Equatable {
-        case add(stage: Add.Stage)
+        case add(Add)
         case wallet(Wallet)
         case wallets(Coin)
         case multibar
@@ -87,36 +87,34 @@ extension Route.Destination {
 }
 
 extension Route {
-    public struct Add {
-        public enum Stage: Codable, Hashable {
-            case coins
-            case coin(Coin)
-            case store(Store)
-            case create(Coin)
-            case `import`(Coin)
+    public enum Add: Codable, Hashable {
+        case coins
+        case coin(Coin)
+        case store(Store)
+        case create(Coin)
+        case `import`(Coin)
+        
+        public var coin: Coin? {
+            switch self {
+            case .coins:
+                return nil
+            case .coin(let coin),
+                 .create(let coin),
+                 .import(let coin):
+                return coin
+            case.store(let store):
+                return store.coin
+            }
+        }
+        public enum Store: Codable, Hashable {
+            case location(Coin)
+            case recovery(Coin, Wallet.Location)
             
             public var coin: Coin? {
                 switch self {
-                case .coins:
-                    return nil
-                case .coin(let coin),
-                     .create(let coin),
-                     .import(let coin):
+                case .location(let coin),
+                     .recovery(let coin, _):
                     return coin
-                case.store(let store):
-                    return store.coin
-                }
-            }
-            public enum Store: Codable, Hashable {
-                case location(Coin)
-                case recovery(Coin, Wallet.Location)
-                
-                public var coin: Coin? {
-                    switch self {
-                    case .location(let coin),
-                         .recovery(let coin, _):
-                        return coin
-                    }
                 }
             }
         }
@@ -133,10 +131,10 @@ extension Route {
     }
 }
 extension Route {
-    public var stage: Add.Stage? {
+    public var add: Add? {
         switch destination {
-        case .add(let stage):
-            return stage
+        case .add(let add):
+            return add
         default:
             return nil
         }
