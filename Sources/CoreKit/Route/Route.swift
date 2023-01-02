@@ -52,6 +52,7 @@ extension Route: Hashable, Equatable {
 extension Route {
     public enum Destination: Codable, Hashable, Equatable {
         case add(stage: Add.Stage)
+        case wallet(Wallet)
         case wallets(Coin)
         case multibar
         case settings
