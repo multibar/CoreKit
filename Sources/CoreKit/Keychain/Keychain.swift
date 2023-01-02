@@ -7,7 +7,7 @@ public struct Keychain {
             .synchronizable(true)
         do {
             try keychain
-                .label(wallet.title ?? wallet.id.components(separatedBy: "-").first ?? wallet.id)
+                .label(wallet.title)
                 .comment("\(wallet.coin)---\(wallet.created.ts)")
                 .set(wallet.phrase, key: wallet.id)
         } catch {
@@ -24,7 +24,7 @@ public struct Keychain {
               let date = Double(comments.components(separatedBy: "---").last ?? "")
         else { return nil }
         return Wallet(id: id,
-                      title: attributes.label,
+                      title: attributes.label ?? id,
                       coin: coin,
                       phrase: phrase,
                       created: Core.Date(with: Date(timeIntervalSince1970: date)),

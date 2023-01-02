@@ -8,7 +8,7 @@ public struct Wallet: Codable, Hashable {
     public let coin: String
     
     /// Wallet public title.
-    public let title: String?
+    public let title: String
     
     /// Wallet secret encrypted phrase.
     public let phrase: String
@@ -20,14 +20,14 @@ public struct Wallet: Codable, Hashable {
     public let location: Location
     
     public init(id: String = UUID().uuidString,
-                title: String? = nil,
+                title: String = "",
                 coin: String,
                 phrase: String,
                 created: Core.Date = .now,
                 location: Location) {
         self.id = id
         self.coin = coin
-        self.title = title
+        self.title = title.empty ? id.components(separatedBy: "-").first ?? id : title
         self.phrase = phrase
         self.created = created
         self.location = location
