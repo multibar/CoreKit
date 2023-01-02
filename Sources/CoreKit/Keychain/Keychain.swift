@@ -2,17 +2,18 @@ import Foundation
 import KeychainAccess
 
 public struct Keychain {    
-    public static func save(wallet: Wallet) throws {
+    public static func save(_ wallet: Wallet) throws {
         let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
             .synchronizable(true)
-        do {
-            try keychain
-                .label(wallet.title)
-                .comment("\(wallet.coin)---\(wallet.created.ts)")
-                .set(wallet.phrase, key: wallet.id)
-        } catch {
-            throw error
-        }
+        try keychain
+            .label(wallet.title)
+            .comment("\(wallet.coin)---\(wallet.created.ts)")
+            .set(wallet.phrase, key: wallet.id)
+    }
+    public static func delete(_ wallet: Wallet) throws {
+        let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
+            .synchronizable(true)
+        try keychain.remove(wallet.id)
     }
     public static func wallet(by id: String) -> Wallet? {
         let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
