@@ -45,7 +45,7 @@ extension Wallet {
                 return false
             case .keychain(let location):
                 switch location {
-                case .local:
+                case .device:
                     return false
                 case .icloud:
                     return true

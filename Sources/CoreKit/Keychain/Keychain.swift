@@ -2,6 +2,12 @@ import Foundation
 import KeychainAccess
 
 public struct Keychain {
+    public static func save(_ key: String, for wallet: Wallet) throws {
+        let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
+            .synchronizable(true)
+        try keychain
+            .set(key, key: wallet.id)
+    }
     public static func save(_ wallet: Wallet) throws {
         let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
             .synchronizable(wallet.location.synchronizable)
@@ -12,6 +18,7 @@ public struct Keychain {
     }
     public static func delete(_ wallet: Wallet) throws {
         try KeychainAccess.Keychain(service: Service.wallets.value).remove(wallet.id)
+        try KeychainAccess.Keychain(service: Service.keys.value).remove(wallet.id)
     }
     public static func wallet(by id: String) -> Wallet? {
         let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
@@ -27,7 +34,7 @@ public struct Keychain {
                       coin: coin,
                       phrase: phrase,
                       created: Core.Date(with: Date(timeIntervalSince1970: date)),
-                      location: .keychain(icloud ? .icloud : .local))
+                      location: .keychain(icloud ? .icloud : .device))
     }
     public static func wallets() -> [Wallet] {
         let keychain = KeychainAccess.Keychain(service: Service.wallets.value)
@@ -37,18 +44,20 @@ public struct Keychain {
 
 extension Keychain {
     fileprivate enum Service {
+        case keys
         case wallets
         case passcode
         
         public var value: String {
             switch self {
+            case .keys: return "bar.multi.wallet.keys"
             case .wallets: return "bar.multi.wallet.wallets"
             case .passcode: return "bar.multi.wallet.passcode"
             }
         }
     }
     public enum Location: Codable, Hashable {
-        case local
+        case device
         case icloud
     }
 }
