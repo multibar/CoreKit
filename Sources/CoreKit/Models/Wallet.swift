@@ -39,15 +39,36 @@ extension Wallet {
         case cloud
         case keychain(Keychain.Location)
         
-        public var synchronizable: Bool {
+        public var cloud: Bool {
+            switch self {
+            case .cloud:
+                return true
+            case .keychain:
+                return false
+            }
+        }
+        public var icloud: Bool {
             switch self {
             case .cloud:
                 return false
             case .keychain(let location):
                 switch location {
+                case .icloud:
+                    return true
                 case .device:
                     return false
+                }
+            }
+        }
+        public var device: Bool {
+            switch self {
+            case .cloud:
+                return false
+            case .keychain(let location):
+                switch location {
                 case .icloud:
+                    return false
+                case .device:
                     return true
                 }
             }

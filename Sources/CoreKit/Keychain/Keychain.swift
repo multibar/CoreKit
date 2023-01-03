@@ -3,24 +3,21 @@ import KeychainAccess
 
 public struct Keychain {
     public static func save(_ key: String, for wallet: Wallet) throws {
-        let keychain = KeychainAccess.Keychain(service: Service.wallets.service(for: .icloud))
-            .synchronizable(true)
-        try keychain
+        try keychain(for: .keys, for: wallet.location)
             .set(key, key: wallet.id)
     }
+    
     public static func save(_ wallet: Wallet) throws {
-        let keychain = KeychainAccess.Keychain(service: Service.wallets.service(for: wallet.location.synchronizable ? .icloud : .device))
-            .synchronizable(wallet.location.synchronizable)
-        try keychain
+        try keychain(for: .wallets, for: wallet.location)
             .label(wallet.title)
             .comment("\(wallet.coin)---\(wallet.created.ts)")
             .set(wallet.phrase, key: wallet.id)
     }
     public static func delete(_ wallet: Wallet) throws {
-        try KeychainAccess.Keychain(service: Service.wallets.service(for: .device)).remove(wallet.id)
-        try KeychainAccess.Keychain(service: Service.wallets.service(for: .icloud)).remove(wallet.id)
         try KeychainAccess.Keychain(service: Service.keys.service(for: .device)).remove(wallet.id)
         try KeychainAccess.Keychain(service: Service.keys.service(for: .icloud)).remove(wallet.id)
+        try KeychainAccess.Keychain(service: Service.wallets.service(for: .device)).remove(wallet.id)
+        try KeychainAccess.Keychain(service: Service.wallets.service(for: .icloud)).remove(wallet.id)
     }
     public static func wallets() -> [Wallet] {
         let device = KeychainAccess.Keychain(service: Service.wallets.service(for: .device))
@@ -46,7 +43,24 @@ public struct Keychain {
                       location: .keychain(icloud ? .icloud : .device))
     }
 }
-
+extension Keychain {
+    fileprivate static func keychain(for service: Service, for location: Wallet.Location) -> KeychainAccess.Keychain {
+        switch service {
+        case .keys:
+            return KeychainAccess.Keychain(service: Service.keys.service(for: location.icloud || location.cloud ? .icloud : .device))
+                .accessibility(location.icloud || location.cloud ? .whenUnlocked : .whenUnlockedThisDeviceOnly)
+                .synchronizable(location.icloud || location.cloud)
+        case .wallets:
+            return KeychainAccess.Keychain(service: Service.wallets.service(for: location.icloud ? .icloud : .device))
+                .accessibility(location.icloud ? .whenUnlocked : .whenUnlockedThisDeviceOnly)
+                .synchronizable(location.icloud)
+        case .passcode:
+            return KeychainAccess.Keychain(service: Service.passcode.service(for: .device))
+                .accessibility(.whenUnlockedThisDeviceOnly)
+                .synchronizable(false)
+        }
+    }
+}
 extension Keychain {
     fileprivate enum Service {
         case keys
