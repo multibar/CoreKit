@@ -6,7 +6,8 @@ public struct Keychain {
         try keychain(for: .keys, for: wallet.location)
             .set(key, key: wallet.id)
     }
-    
+}
+extension Keychain {
     public static func save(_ wallet: Wallet) throws {
         try keychain(for: .wallets, for: wallet.location)
             .label(wallet.title)
@@ -41,6 +42,16 @@ public struct Keychain {
                       phrase: phrase,
                       created: Time(with: date),
                       location: .keychain(icloud ? .icloud : .device))
+    }
+}
+extension Keychain {
+    public static var passcode: String? {
+        return try? keychain(for: .passcode, for: .keychain(.device))
+            .get(Keychain.Passcode.key)
+    }
+    public static func set(_ passcode: String) throws {
+        try keychain(for: .passcode, for: .keychain(.device))
+            .set(passcode, key: Keychain.Passcode.key)
     }
 }
 extension Keychain {
@@ -91,5 +102,10 @@ extension Keychain {
     public enum Location: Codable, Hashable {
         case device
         case icloud
+    }
+}
+extension Keychain {
+    fileprivate struct Passcode {
+        fileprivate static let key = "bar.multi.wallet.device.passcode.value"
     }
 }
