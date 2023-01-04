@@ -61,7 +61,7 @@ extension Route {
 }
 extension Route.Destination {
     public init(from source: String? = nil) {
-        guard let source = source?.lowercased(), let host = Core.Manager.shared.network?.host else {
+        guard let source = source?.lowercased(), let host = Core.shared.network?.host else {
             self = .unknown(.internal())
             return
         }

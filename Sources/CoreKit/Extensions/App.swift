@@ -59,7 +59,7 @@ extension System.App {
                     return "\(osName) \(versionString)"
                 }()
                 #if os(iOS) || os(tvOS)
-                return "\(appName) \(appVersion) (Apple, \(Core.Manager.shared.interface?.device ?? UIDevice.current.name), \(osNameVersion))"
+                return "\(appName) \(appVersion) (Apple, \(Core.shared.interface?.device ?? UIDevice.current.name), \(osNameVersion))"
                 #elseif os(macOS)
                 return "\(appName) \(appVersion) (Apple, Mac, \(osNameVersion))"
                 #else

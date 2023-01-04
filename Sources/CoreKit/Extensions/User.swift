@@ -17,6 +17,6 @@ extension System.User {
 }
 extension System.User {
     public static var current: System.User? {
-        return Core.Manager.shared.network?.user
+        return Core.shared.network?.user
     }
 }

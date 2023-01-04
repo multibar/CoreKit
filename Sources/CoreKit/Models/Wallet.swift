@@ -14,7 +14,7 @@ public struct Wallet: Codable, Hashable {
     public let phrase: String
     
     /// Wallet creation date.
-    public let created: Core.Date
+    public let created: Time
     
     /// Wallet location.
     public let location: Location
@@ -23,7 +23,7 @@ public struct Wallet: Codable, Hashable {
                 title: String = "",
                 coin: String,
                 phrase: String,
-                created: Core.Date = .now,
+                created: Time = time,
                 location: Location) {
         self.id = id
         self.coin = coin

@@ -10,7 +10,7 @@ public struct Keychain {
     public static func save(_ wallet: Wallet) throws {
         try keychain(for: .wallets, for: wallet.location)
             .label(wallet.title)
-            .comment("\(wallet.coin)---\(wallet.created.ts)")
+            .comment("\(wallet.coin)---\(wallet.created.seconds)")
             .set(wallet.phrase, key: wallet.id)
     }
     public static func delete(_ wallet: Wallet) throws {
@@ -39,7 +39,7 @@ public struct Keychain {
                       title: attributes.label ?? id,
                       coin: coin,
                       phrase: phrase,
-                      created: Core.Date(with: Date(timeIntervalSince1970: date)),
+                      created: Time(with: date),
                       location: .keychain(icloud ? .icloud : .device))
     }
 }

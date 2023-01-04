@@ -1,15 +1,15 @@
 import Foundation
 
-extension Core.Manager {
+extension Core {
     public struct Event {
         public let event: String
-        public let date: Core.Date
         public let source: Source
+        public let recorded: Time
         
         public init(event: String, source: Source, date: Foundation.Date = Foundation.Date()) {
             self.event = event
             self.source = source
-            self.date = Core.Date(with: date)
+            self.recorded = Time(with: date)
         }
         
         public enum Source {
