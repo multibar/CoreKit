@@ -1,6 +1,9 @@
 import Foundation
 
 public struct Settings {
+    private init() {}
+}
+extension Settings {
     public static func set<T>(value: T, for key: String) {
         UserDefaults.standard.set(value, forKey: key)
     }
@@ -10,79 +13,9 @@ public struct Settings {
     public static func remove(at key: String) {
         UserDefaults.standard.removeObject(forKey: key)
     }
-    private init() {}
 }
-
 extension Settings {
-    public struct Core { private init() {} }
-    public struct System { private init() {} }
-}
-
-extension Settings.System {
-    public struct Console {
-        public static var app: Bool {
-            get {
-                let value = Settings.get(value: Bool.self, for: Settings.Keys.System.Console.app) ?? true
-                return value
-            } set {
-                Settings.set(value: newValue, for: Settings.Keys.System.Console.app)
-            }
-        }
-        public static var user: Bool {
-            get {
-                let value = Settings.get(value: Bool.self, for: Settings.Keys.System.Console.user) ?? false
-                return value
-            } set {
-                Settings.set(value: newValue, for: Settings.Keys.System.Console.user)
-            }
-        }
-        public static var images: Bool {
-            get {
-                let value = Settings.get(value: Bool.self, for: Settings.Keys.System.Console.images) ?? true
-                return value
-            } set {
-                Settings.set(value: newValue, for: Settings.Keys.System.Console.images)
-            }
-        }
-        public static var player: Bool {
-            get {
-                let value = Settings.get(value: Bool.self, for: Settings.Keys.System.Console.player) ?? true
-                return value
-            } set {
-                Settings.set(value: newValue, for: Settings.Keys.System.Console.player)
-            }
-        }
-        public static var storage: Bool {
-            get {
-                let value = Settings.get(value: Bool.self, for: Settings.Keys.System.Console.storage) ?? true
-                return value
-            } set {
-                Settings.set(value: newValue, for: Settings.Keys.System.Console.storage)
-            }
-        }
-        public static var metrics: Bool {
-            get {
-                let value = Settings.get(value: Bool.self, for: Settings.Keys.System.Console.metrics) ?? true
-                return value
-            } set {
-                Settings.set(value: newValue, for: Settings.Keys.System.Console.metrics)
-            }
-        }
-        public static var network: Bool {
-            get {
-                let value = Settings.get(value: Bool.self, for: Settings.Keys.System.Console.network) ?? true
-                return value
-            } set {
-                Settings.set(value: newValue, for: Settings.Keys.System.Console.network)
-            }
-        }
-        public static var firebase: Bool {
-            get {
-                let value = Settings.get(value: Bool.self, for: Settings.Keys.System.Console.firebase) ?? true
-                return value
-            } set {
-                Settings.set(value: newValue, for: Settings.Keys.System.Console.firebase)
-            }
-        }
+    public struct Core {
+        private init() {}
     }
 }

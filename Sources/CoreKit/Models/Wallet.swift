@@ -23,7 +23,7 @@ public struct Wallet: Codable, Hashable {
                 title: String = "",
                 coin: String,
                 phrase: String,
-                created: Time = time,
+                created: Time = .now,
                 location: Location) {
         self.id = id
         self.coin = coin

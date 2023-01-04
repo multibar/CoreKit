@@ -26,7 +26,7 @@ public final class Core {
     private init() {
         let session = UUID()
         self.session = session
-        Core.log(event: "Session \(session.uuidString) — \(time.debug)")
+        Core.log(event: "Session \(session.uuidString) — \(Time.now.debug)")
         Core.log(event: "CoreKit initialized")
         setupNotifications()
     }

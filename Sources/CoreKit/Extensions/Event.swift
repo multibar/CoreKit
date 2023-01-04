@@ -34,19 +34,6 @@ extension Core {
                 case .firebase: return "Firebase"
                 }
             }
-            
-            public var available: Bool {
-                switch self {
-                case .app     : return Settings.System.Console.app
-                case .user    : return Settings.System.Console.user
-                case .images  : return Settings.System.Console.images
-                case .player  : return Settings.System.Console.player
-                case .storage : return Settings.System.Console.storage
-                case .metrics : return Settings.System.Console.metrics
-                case .network : return Settings.System.Console.network
-                case .firebase: return Settings.System.Console.network
-                }
-            }
         }
     }
 }

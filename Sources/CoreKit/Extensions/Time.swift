@@ -1,13 +1,10 @@
 import Foundation
 import OrderedCollections
 
-public var time: Time {
-    return Time()
-}
 public struct Time {
     public let date: Date
     public let seconds: Double
-    
+            
     public init(with date: Date = Date()) {
         self.date = date
         self.seconds = date.seconds
@@ -30,12 +27,13 @@ extension Time {
 }
 extension Time {
     public var expired: Bool {
-        return seconds(to: time) == 0
+        return seconds(to: Time.now) == 0
     }
     public func seconds(to date: Time) -> Int {
         let seconds = Int(seconds - date.seconds)
         return seconds >= 0 ? seconds : 0
     }
+    public static var now: Time { Time() }
 }
 extension Time {
     public static func minutes(_ value: Int) -> Time {
