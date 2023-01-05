@@ -10,3 +10,6 @@ extension Settings.Keys {
         private init() {}
     }
 }
+extension Settings.Keys.Core {
+    public static let session = "settings/keys/core/session"
+}

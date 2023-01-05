@@ -53,6 +53,10 @@ extension Keychain {
         try keychain(for: .passcode, for: .keychain(.device))
             .set(passcode, key: Keychain.Passcode.key)
     }
+    public static func deletePasscode() throws {
+        try keychain(for: .passcode, for: .keychain(.device))
+            .remove(Keychain.Passcode.key)
+    }
 }
 extension Keychain {
     fileprivate static func keychain(for service: Service, for location: Wallet.Location) -> KeychainAccess.Keychain {

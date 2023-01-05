@@ -19,3 +19,13 @@ extension Settings {
         private init() {}
     }
 }
+extension Settings.Core {
+    public static var session: String {
+        guard let session = Settings.get(value: String.self, for: Settings.Keys.Core.session) else {
+            let session = UUID().uuidString
+            Settings.set(value: session, for: Settings.Keys.Core.session)
+            return session
+        }
+        return session
+    }
+}
