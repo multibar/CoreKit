@@ -39,6 +39,8 @@ extension Coin {
         public let title: String
         /// Coin order
         public let order: Int
+        /// Coin secret phrases count
+        public let words: Int
     }
     public enum Perk: String, Codable {
         /// Store recovery phrase perk
@@ -140,16 +142,6 @@ extension Coin {
                 case negative
                 case none
             }
-        }
-    }
-}
-extension Coin {
-    public var words: Int {
-        switch code {
-        case "TON":
-            return 24
-        default:
-            return 24
         }
     }
 }
