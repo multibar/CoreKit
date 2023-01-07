@@ -108,12 +108,12 @@ extension Route {
         }
         public enum Store: Codable, Hashable {
             case location(Coin)
-            case recovery(Coin, Wallet.Location)
+            case recovery(Coin, Wallet.Location, Int)
             
             public var coin: Coin? {
                 switch self {
                 case .location(let coin),
-                     .recovery(let coin, _):
+                     .recovery(let coin, _, _):
                     return coin
                 }
             }

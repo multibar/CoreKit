@@ -21,10 +21,7 @@ extension String {
             return NSAttributedString(string: self)
         }
     }
-}
-extension String.Element {
-    public static var random: String {
-        let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&()0123456789"
+    public static func random(from characters: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&()0123456789") -> String {
         return characters.random
     }
 }
