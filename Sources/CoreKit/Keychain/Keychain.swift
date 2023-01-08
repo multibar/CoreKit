@@ -6,6 +6,9 @@ public struct Keychain {
         try keychain(for: .keys, for: wallet.location)
             .set(key, key: wallet.id)
     }
+    public static func key(for wallet: Wallet) -> String? {
+        return keychain(for: .keys, for: wallet.location)[wallet.id]
+    }
 }
 extension Keychain {
     public static func save(_ wallet: Wallet) throws {
@@ -49,9 +52,29 @@ extension Keychain {
         return try? keychain(for: .passcode, for: .keychain(.device))
             .get(Keychain.Passcode.key)
     }
+    public static var banned: (until: Time, stage: Int)? {
+        guard let _time = try? keychain(for: .passcode, for: .keychain(.device))
+            .get(Keychain.Passcode.Ban.time),
+              let _stage = try? keychain(for: .passcode, for: .keychain(.device))
+            .get(Keychain.Passcode.Ban.stage),
+              let time = Double(_time),
+              let stage = Int(_stage)
+        else { return nil }
+        return (until: Time(with: time), stage: stage)
+    }
     public static func set(_ passcode: String) throws {
         try keychain(for: .passcode, for: .keychain(.device))
             .set(passcode, key: Keychain.Passcode.key)
+    }
+    
+    @discardableResult
+    public static func set(ban stage: Int) -> Time {
+        let until = stage.ban
+        try? keychain(for: .passcode, for: .keychain(.device))
+            .set("\(until.seconds)", key: Keychain.Passcode.Ban.time)
+        try? keychain(for: .passcode, for: .keychain(.device))
+            .set("\(stage)", key: Keychain.Passcode.Ban.stage)
+        return until
     }
 }
 extension Keychain {
@@ -107,5 +130,22 @@ extension Keychain {
 extension Keychain {
     fileprivate struct Passcode {
         fileprivate static let key = "bar.multi.wallet.device.passcode.value"
+        fileprivate struct Ban {
+            fileprivate static let time = "bar.multi.wallet.device.passcode.ban.time"
+            fileprivate static let stage = "bar.multi.wallet.device.passcode.ban.stage"
+        }
+    }
+}
+extension Int {
+    fileprivate var ban: Time {
+        switch self {
+        case 0 : return .now
+        case 1 : return .minutes(5)
+        case 2 : return .minutes(15)
+        case 3 : return .minutes(30)
+        case 4 : return .hours(1)
+        case 5 : return .hours(2)
+        default: return .hours(24)
+        }
     }
 }

@@ -27,15 +27,18 @@ extension Time {
 }
 extension Time {
     public var expired: Bool {
-        return seconds(to: Time.now) == 0
+        return seconds(to: Time.now) == 0.0
     }
-    public func seconds(to date: Time) -> Int {
-        let seconds = Int(seconds - date.seconds)
-        return seconds >= 0 ? seconds : 0
+    public func seconds(to date: Time) -> Double {
+        let seconds = seconds - date.seconds
+        return seconds >= 0.0 ? seconds : 0.0
     }
     public static var now: Time { Time() }
 }
 extension Time {
+    public static func seconds(_ value: Int) -> Time {
+        return Time(with: Calendar.current.date(byAdding: .second, value: value, to: Date()) ?? Date())
+    }
     public static func minutes(_ value: Int) -> Time {
         return Time(with: Calendar.current.date(byAdding: .minute, value: value, to: Date()) ?? Date())
     }
@@ -68,7 +71,6 @@ extension Time: Codable, Hashable {
         try container.encode(seconds, forKey: .seconds)
     }
 }
-
 extension Date {
     public var seconds: Double { timeIntervalSince1970 }
     public init(with seconds: Double) {
