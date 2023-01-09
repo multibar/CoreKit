@@ -18,7 +18,7 @@ extension System.Device {
     }()
     
     public static func authenticate(reason: String = "Authentication") async throws {
-        let reason = (reason.empty || reason.replacingOccurrences(of: " ", with: "").empty) ? "Authentication" : reason
+        let reason = reason.blank ? "Authentication" : reason
         try await LAContext().evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason)
     }
     

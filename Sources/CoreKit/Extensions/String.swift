@@ -4,6 +4,9 @@ extension String {
     public var empty: Bool {
         return isEmpty
     }
+    public var blank: Bool {
+        return empty || replacingOccurrences(of: " ", with: "").empty
+    }
     public var random: String {
         guard let element = randomElement() else { return "" }
         return String(element)
