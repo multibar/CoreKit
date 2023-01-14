@@ -55,7 +55,7 @@ extension Route {
         case wallet(Wallet)
         case wallets(Coin)
         case multibar
-        case settings
+        case settings(Settings)
         case unknown(Unknown)
     }
 }
@@ -118,6 +118,10 @@ extension Route {
                 }
             }
         }
+    }
+    public enum Settings: Codable, Hashable {
+        case all
+        case currency
     }
     public enum Unknown: Codable, Hashable {
         case external(url: URL? = nil)
