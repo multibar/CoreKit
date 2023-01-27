@@ -1,4 +1,4 @@
-#if os(iOS) || os(tvOS)
+#if canImport(UIKit)
 import UIKit
 #else
 import Foundation
@@ -11,7 +11,7 @@ extension System.App {
     public static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
 }
 extension System.App {
-    #if os(iOS) || os(tvOS)
+    #if canImport(UIKit)
     public static var state: UIApplication.State {
         return UIApplication.shared.applicationState
     }
@@ -58,7 +58,7 @@ extension System.App {
                     }()
                     return "\(osName) \(versionString)"
                 }()
-                #if os(iOS) || os(tvOS)
+                #if canImport(UIKit)
                 return "\(appName) \(appVersion) (Apple, \(Core.shared.interface?.device ?? UIDevice.current.name), \(osNameVersion))"
                 #elseif os(macOS)
                 return "\(appName) \(appVersion) (Apple, Mac, \(osNameVersion))"

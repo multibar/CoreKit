@@ -1,4 +1,4 @@
-#if os(iOS) || os(tvOS)
+#if canImport(UIKit)
 import UIKit
 #else
 import Foundation
@@ -32,7 +32,7 @@ public final class Core {
     }
     
     private func setupNotifications() {
-        #if os(iOS) || os(tvOS)
+        #if canImport(UIKit)
         let center = NotificationCenter.default
         center.addObserver(self, selector: #selector(didFinishLaunching),  name: UIApplication.didFinishLaunchingNotification, object: nil)
         center.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -52,7 +52,7 @@ public final class Core {
         #endif
     }
     
-    #if os(iOS) || os(tvOS)
+    #if canImport(UIKit)
     @objc
     private func didFinishLaunching() {
         Core.log(event: "App Did Finish Launching")
